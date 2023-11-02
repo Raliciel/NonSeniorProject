@@ -28,9 +28,9 @@ public class CameraFollow : MonoBehaviour
     {
         if (target == null) return;
         //Change Only when Player is proceed higher
-        if (transform.position.y < target.position.y + offsetY)
+        if (transform.position.y < target.position.y)
         {
-            transform.position = new Vector3(cameraTransform.x, target.position.y + offsetY, offsetZ);
+            transform.position = new Vector3(cameraTransform.x, target.position.y, offsetZ);
         }
     }
 }

@@ -25,8 +25,9 @@ public class AntiCollision : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        if (GameObject.FindGameObjectWithTag("Player") == null) return;
         if (PlayerCheck())
         {
             platform.isTrigger = false;
@@ -34,6 +35,15 @@ public class AntiCollision : MonoBehaviour
         else
         {
             platform.isTrigger = true;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Stuck");
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>().Jump(10);
         }
     }
 

@@ -6,13 +6,17 @@ public class ChunkScript : MonoBehaviour
 {
     public Vector3 size;
     private Bounds bounds;
+    GameObject player;
+
     void Start()
     {
         bounds = GetBound();
         size = bounds.size;
+
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    Bounds GetBound()
+    public Bounds GetBound()
     {
         Bounds bounds = new Bounds();
         Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
@@ -45,6 +49,15 @@ public class ChunkScript : MonoBehaviour
     public Vector3 GetSize()
     {
         return size;
+    }
+
+    public void Update()
+    {
+        if (player == null) return;
+        if (player.transform.position.y-10 > gameObject.GetComponent<ChunkScript>().GetBound().center.y)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnDrawGizmos()

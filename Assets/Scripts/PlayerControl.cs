@@ -4,44 +4,29 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
-    public Animator animating;
     public static PlayerControl instance;
+    public static SpriteRenderer sprite;
 
     public float speed = 5f;
     public float jumpForce = 10f;
 
     public float xMargin; 
 
-    [HideInInspector] public bool groundCheck = false;
+    bool groundCheck = false;
     Rigidbody2D rd;
+    bool gameOver = false;
+    float gameOverHeight = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        instance = this;
-        rd = GetComponent<Rigidbody2D>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        TransverseSide();
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
-        if (groundCheck)
-        {
-            Jump(jumpForce);
-        }
-    }
-
+    [SerializeField] Sprite jumpUpSprite;
+    [SerializeField] Sprite jumpDownSprite;
+    [SerializeField] Sprite deadSprite;
     void Move()
     {
         if (Input.GetButton("Horizontal"))
         {
             rd.AddForce(speed * Input.GetAxis("Horizontal" )* Vector2.right);
+            if (Input.GetAxis("Horizontal") > 0) sprite.flipX = true;
+            else sprite.flipX = false;
         }
     }
 
@@ -75,9 +60,50 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    void Death()
+    public void Death()
     {
-        Debug.Log("Game Over");
-        Destroy(gameObject);
+        Debug.Log("Game Over" + transform.position.y);
+        sprite.sprite = deadSprite;
+        gameOverHeight = transform.position.y;
+        rd.AddForce(new Vector2(0, 500));
+        gameOver = true;
     }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        instance = this;
+        rd = GetComponent<Rigidbody2D>();
+        sprite = gameObject.GetComponent<SpriteRenderer>();
+    }
+
+    void CheckSprite()
+    {
+        if (rd.velocity.y > 0) sprite.sprite = jumpUpSprite;
+        else sprite.sprite = jumpDownSprite;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (gameOver)
+        {
+            rd.bodyType = RigidbodyType2D.Kinematic;
+            if (gameOverHeight - 3 > transform.position.y) Destroy(gameObject);
+            return;
+        }
+        CheckSprite();
+        TransverseSide();
+    }
+
+    private void FixedUpdate()
+    {
+        if (gameOver) return;
+        Move();
+        if (groundCheck)
+        {
+            Jump(jumpForce);
+        }
+    }
+
 }
