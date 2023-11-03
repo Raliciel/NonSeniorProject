@@ -25,9 +25,9 @@ public class ScoreCount : MonoBehaviour
     {
         if (player == null) return;
 
-        if (score < player.position.y - startingHeight)
+        if (score < player.position.y - startingHeight - 1.78f)
         {
-            score = player.position.y - startingHeight;
+            score = player.position.y - startingHeight - 1.78f;
             scoreText.text = score.ToString("F2") + "cm";
         }
     }

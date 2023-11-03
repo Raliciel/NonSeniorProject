@@ -14,12 +14,15 @@ public class PlayerControl : MonoBehaviour
 
     bool groundCheck = false;
     Rigidbody2D rd;
-    bool gameOver = false;
-    float gameOverHeight = 0;
 
     [SerializeField] Sprite jumpUpSprite;
     [SerializeField] Sprite jumpDownSprite;
     [SerializeField] Sprite deadSprite;
+
+    [SerializeField] GameObject gameOverMenu;
+    bool gameOver = false;
+    float gameOverHeight = 0;
+
     void Move()
     {
         if (Input.GetButton("Horizontal"))
@@ -88,8 +91,8 @@ public class PlayerControl : MonoBehaviour
     {
         if (gameOver)
         {
-            rd.bodyType = RigidbodyType2D.Kinematic;
-            if (gameOverHeight - 3 > transform.position.y) Destroy(gameObject);
+            if (gameOverHeight - 3 > transform.position.y || groundCheck) Destroy(gameObject);
+            gameOverMenu.SetActive(true);
             return;
         }
         CheckSprite();
@@ -106,4 +109,5 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    public void SetGroundCheck(bool check) { groundCheck = check; groundCheck = !check; }
 }

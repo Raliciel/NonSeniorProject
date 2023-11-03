@@ -7,7 +7,7 @@ public class ParalaxScript : MonoBehaviour
     [SerializeField] GameObject bgTile;
     [SerializeField] Transform camera;
     [SerializeField] private int strech = 2;
-    private static int tileCount = 1;
+    private int tileCount = 1;
 
     void Start()
     {
