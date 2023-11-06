@@ -10,9 +10,9 @@ public class PlayerControl : MonoBehaviour
     public float speed = 5f;
     public float jumpForce = 10f;
 
-    public float xMargin; 
+    public float xMargin;
 
-    bool groundCheck = false;
+    [SerializeField] bool groundCheck = false;
     Rigidbody2D rd;
 
     [SerializeField] Sprite jumpUpSprite;
@@ -51,7 +51,7 @@ public class PlayerControl : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground")) groundCheck = true;
+        if (collision.gameObject.CompareTag("Ground")) { Jump(jumpForce); groundCheck = true; };
         if (collision.gameObject.CompareTag("DeadZone")) Death();
     }
 
@@ -68,7 +68,7 @@ public class PlayerControl : MonoBehaviour
         Debug.Log("Game Over" + transform.position.y);
         sprite.sprite = deadSprite;
         gameOverHeight = transform.position.y;
-        rd.AddForce(new Vector2(0, 500));
+        Jump(500);
         gameOver = true;
     }
 
@@ -103,10 +103,6 @@ public class PlayerControl : MonoBehaviour
     {
         if (gameOver) return;
         Move();
-        if (groundCheck)
-        {
-            Jump(jumpForce);
-        }
     }
 
     public void SetGroundCheck(bool check) { groundCheck = check; groundCheck = !check; }

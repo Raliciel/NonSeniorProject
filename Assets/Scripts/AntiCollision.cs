@@ -37,24 +37,26 @@ public class AntiCollision : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D col)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (col.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Stuck" + GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>().velocity);
-            if (GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>().velocity.x <= 0 &&
-                GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>().velocity.y <= 0) { GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>().SetGroundCheck(true); }
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>().SetGroundCheck(true); 
         }
     }
 
-    bool PlayerCheck()
+    public bool PlayerCheck()
     {
         Collider2D[] Colli = Physics2D.OverlapBoxAll(platform.bounds.center + offset, boxSize, 0);
         foreach (Collider2D col in Colli)
         {
             if (col.transform.CompareTag("Player"))
             {
-                return true;
+                if (col.bounds.center.y - col.bounds.size.y / 2 <= platform.bounds.center.y + offset.y + boxSize.y / 2 &&
+                    col.bounds.center.y - col.bounds.size.y / 2 >= platform.bounds.center.y + offset.y - boxSize.y / 2)
+                {
+                    return true;
+                }
             }
         }
         return false;
